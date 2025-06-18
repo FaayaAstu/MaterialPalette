@@ -83,9 +83,10 @@ def get_lora_sd_pipeline(
     #     safety_checker=None,
     # ).to(device)
     pipe = download_from_original_stable_diffusion_ckpt(
-        "/runpod-volume/models/v1-5-pruned.ckpt",
-        device="cuda"
-    ).to(device)
+        "/runpod-volume/models/v1-5-pruned-emaonly.safetensors",
+        from_safetensors=True,
+        device=device
+    ).to(device, dtype=torch.float16)
 
     pipe.unet = PeftModel.from_pretrained(pipe.unet, unet_sub_dir, adapter_name=adapter_name)
 
@@ -106,10 +107,10 @@ def get_vanilla_sd_pipeline(device='cuda'):
     from diffusers.pipelines.stable_diffusion.convert_from_ckpt import download_from_original_stable_diffusion_ckpt
 
     pipe = download_from_original_stable_diffusion_ckpt(
-        checkpoint_path="/runpod-volume/models/v1-5-pruned-emaonly.ckpt",
-        device="cuda"
+        "/runpod-volume/models/v1-5-pruned-emaonly.safetensors",
+        from_safetensors=True,
     )
-    pipe.to(device)
+    pipe.to(device, dtype=torch.float16)
     return pipe
 
 @torch.no_grad()
