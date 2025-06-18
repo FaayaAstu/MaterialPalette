@@ -83,7 +83,7 @@ def get_lora_sd_pipeline(
     #     safety_checker=None,
     # ).to(device)
     pipe = download_from_original_stable_diffusion_ckpt(
-        checkpoint_path="/runpod-volume/models/v1-5-pruned-emaonly.ckpt",
+        "/runpod-volume/models/v1-5-pruned-emaonly.ckpt",
         device="cuda"
     ).to(device)
 
