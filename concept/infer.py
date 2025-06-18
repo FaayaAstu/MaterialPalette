@@ -74,6 +74,7 @@ def get_lora_sd_pipeline(
     if base_model_name_or_path is None:
         raise ValueError("Please specify the base model name or path")
 
+    print(f'loading model {base_model_name_or_path}')
     pipe = StableDiffusionPipeline.from_pretrained(
         base_model_name_or_path,
         torch_dtype=dtype,
@@ -97,13 +98,11 @@ def get_lora_sd_pipeline(
 
 def get_vanilla_sd_pipeline(device='cuda'):
     from diffusers import StableDiffusionPipeline
+    from diffusers.pipelines.stable_diffusion.convert_from_ckpt import download_from_original_stable_diffusion_ckpt
 
-    pipe = StableDiffusionPipeline.from_pretrained(
-        "runwayml/stable-diffusion-v1-5",
-        revision="fp16",
-        torch_dtype=torch.float16,
-        local_files_only=True,
-        safety_checker=None,
+    pipe = download_from_original_stable_diffusion_ckpt(
+        checkpoint_path="/runpod-volume/models/v1-5-pruned-emaonly.ckpt",
+        device="cuda"
     )
     pipe.to(device)
     return pipe
