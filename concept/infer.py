@@ -63,6 +63,7 @@ def get_lora_sd_pipeline(
 ):
     from peft import PeftModel, LoraConfig
     from diffusers import StableDiffusionPipeline
+    from diffusers.pipelines.stable_diffusion.convert_from_ckpt import download_from_original_stable_diffusion_ckpt
 
     unet_sub_dir = os.path.join(ckpt_dir, "unet")
     text_encoder_sub_dir = os.path.join(ckpt_dir, "text_encoder")
@@ -75,11 +76,15 @@ def get_lora_sd_pipeline(
         raise ValueError("Please specify the base model name or path")
 
     print(f'loading model {base_model_name_or_path}')
-    pipe = StableDiffusionPipeline.from_pretrained(
-        base_model_name_or_path,
-        torch_dtype=dtype,
-        local_files_only=True,
-        safety_checker=None,
+    # pipe = StableDiffusionPipeline.from_pretrained(
+    #     base_model_name_or_path,
+    #     torch_dtype=dtype,
+    #     local_files_only=True,
+    #     safety_checker=None,
+    # ).to(device)
+    pipe = download_from_original_stable_diffusion_ckpt(
+        checkpoint_path="/runpod-volume/models/v1-5-pruned-emaonly.ckpt",
+        device="cuda"
     ).to(device)
 
     pipe.unet = PeftModel.from_pretrained(pipe.unet, unet_sub_dir, adapter_name=adapter_name)
