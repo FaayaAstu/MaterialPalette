@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     ## Construct a dataset with all generations and load pretrained decomposition model
     data = capture.get_data(predict_dir=args.path, predict_ds='sd')
-    module = capture.get_inference_module(pt='model.ckpt')
+    module = capture.get_inference_module(pt='/runpod-volume/matpal_model.ckpt')
 
     ## Proceed with inference on decomposition model
     decomp = Trainer(default_root_dir=args.path, accelerator='gpu', devices=1, precision=16)
