@@ -18,7 +18,7 @@ if __name__ == '__main__':
     ## Iterate through regions to invert the concept and generate texture views
     for region in regions.iterdir():
         lora = concept.invert(region)
-        concept.infer(lora, renorm=True)
+        concept.infer(Path("/MaterialPalette/cat_fur"), renorm=True)
 
     ## Construct a dataset with all generations and load pretrained decomposition model
     data = capture.get_data(predict_dir=args.path, predict_ds='sd')
